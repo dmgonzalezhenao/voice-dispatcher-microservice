@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     ELEVENLABS_API_KEY: str
     
     # Default ElevenLabs voice identifier (Rachel) used when no specific voice is provided
-    DEFAULT_VOICE_ID: str = "21m00Tcm4TlvDq8ikWAM"
+    DEFAULT_VOICE_ID: str = "pNInz6obpgDQGcFmaJgB"
     
     # Base URL for the target Supabase project instance
     SUPABASE_URL: str
