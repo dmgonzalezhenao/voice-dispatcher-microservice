@@ -12,9 +12,12 @@ and Supabase cloud storage persistence using `asyncio.gather` for optimal concur
 
 import asyncio
 import time
-from fastapi import FastAPI, Depends, Header, status
+from fastapi import FastAPI, Depends, Header, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from backend.schemas import SynthesisRequest, SynthesisResponse, AudioItemResult
 from backend.security import verify_api_key
@@ -26,6 +29,11 @@ app = FastAPI(
     description="High-performance asynchronous microservice for voice synthesis and cloud asset dispatch.",
     version="1.0.0"
 )
+
+# Initialize rate limiter using client remote IP address
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure Cross-Origin Resource Sharing (CORS) for external frontend connectivity
 app.add_middleware(
@@ -52,7 +60,9 @@ async def health_check():
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(verify_api_key)]
 )
+@limiter.limit("3/day", exempt_when=lambda request: bool(request.headers.get("X-ElevenLabs-Key")))
 async def dispatch_tts(
+    request: Request,
     payload: SynthesisRequest,
     x_elevenlabs_key: str | None = Header(default=None, alias="X-ElevenLabs-Key")
 ):
