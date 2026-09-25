@@ -121,8 +121,6 @@ if st.button("⚡ Dispatch Parallel Voice Synthesis", type="primary", use_contai
         st.error("Please enter at least one phrase to synthesize.")
     elif len(parsed_phrases) > 5:
         st.warning("Maximum batch size exceeded! Please limit your request to a maximum of 5 phrases.")
-    elif not api_key:
-        st.error("Missing X-API-KEY! Please enter a valid security key in the sidebar.")
     else:
         # Construct backend API request payload
         payload = {
@@ -137,7 +135,7 @@ if st.button("⚡ Dispatch Parallel Voice Synthesis", type="primary", use_contai
         
         # Prepare custom HTTP headers for backend request
         headers = {
-            "X-API-KEY": api_key,
+            "X-API-KEY": DEFAULT_API_KEY,
             "Content-Type": "application/json"
         }
         
