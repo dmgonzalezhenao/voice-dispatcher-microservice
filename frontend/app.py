@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Define backend default service URL and authorization secret key
-DEFAULT_BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+DEFAULT_BACKEND_URL = os.getenv("BACKEND_URL", "")
 DEFAULT_API_KEY = os.getenv("API_SECRET_KEY", "")
 
 
@@ -43,14 +43,6 @@ with st.sidebar:
         "Backend Base URL",
         value=DEFAULT_BACKEND_URL,
         help="Target FastAPI microservice base URL."
-    )
-    
-    # API Secret Key configuration for header-based authorization
-    api_key = st.text_input(
-        "X-API-KEY Authorization",
-        value=DEFAULT_API_KEY,
-        type="password",
-        help="Secret key expected by the backend verify_api_key security dependency."
     )
     
     # Optional ElevenLabs dynamic key override
