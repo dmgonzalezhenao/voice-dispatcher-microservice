@@ -38,13 +38,6 @@ st.caption("High-performance asynchronous microservice for parallel text-to-spee
 with st.sidebar:
     st.header("⚙️ System Configuration")
     
-    # Endpoint URL configuration
-    backend_url = st.text_input(
-        "Backend Base URL",
-        value=DEFAULT_BACKEND_URL,
-        help="Target FastAPI microservice base URL."
-    )
-    
     # Optional ElevenLabs dynamic key override
     elevenlabs_key_override = st.text_input(
         "Custom ElevenLabs API Key (Optional)",
@@ -52,6 +45,8 @@ with st.sidebar:
         type="password",
         help="Optional dynamic key override. Leave empty to use system environment default."
     )
+
+    st.info("💡 **Note:** You have **3 free uses per day**. For unlimited use, enter your own ElevenLabs key above.")
     
     st.divider()
     
@@ -61,7 +56,6 @@ with st.sidebar:
     voice_options = {
         "Adam (Multilingual Male - Free)": "pNInz6obpgDQGcFmaJgB",
         "George (Warm & Deep Male - Free)": "JBFqnCBsd6RMkjVDRZzb",
-        "Nicole (Soft & Gentle Female - Free)": "piTKg1P1L381D3E3L5C1",
         "Custom Voice ID": "custom"
     }
     
@@ -143,7 +137,7 @@ if st.button("⚡ Dispatch Parallel Voice Synthesis", type="primary", use_contai
         if elevenlabs_key_override.strip():
             headers["X-ElevenLabs-Key"] = elevenlabs_key_override.strip()
 
-        dispatch_endpoint = f"{backend_url.rstrip('/')}/api/v1/dispatch"
+        dispatch_endpoint = f"{DEFAULT_BACKEND_URL.rstrip('/')}/api/v1/dispatch"
 
         # Execute HTTP POST request with loading spinner
         with st.spinner("Synthesizing audio phrases and uploading to Supabase CDN in parallel..."):
