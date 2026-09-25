@@ -4,7 +4,16 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.15.0",
+    "requests>=2.34.2",
+    "slowapi>=0.1.10",
+    "streamlit>=1.64.0",
+    "supabase>=2.31.0",
+    "uvicorn[standard]>=0.54.0",
+]
 
 [project.scripts]
 voice-dispatcher-microservice = "voice_dispatcher_microservice:main"
@@ -12,3 +21,6 @@ voice-dispatcher-microservice = "voice_dispatcher_microservice:main"
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+package = false
