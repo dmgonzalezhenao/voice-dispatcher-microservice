@@ -21,7 +21,7 @@ A high-performance asynchronous microservice engineered for batch Text-to-Speech
 ## 🏗️ System Architecture
 
 ```text
-+----------------------------+
+                    +----------------------------+
                     |   Streamlit Cloud UI       |
                     |   (Frontend Client)        |
                     +--------------+-------------+
@@ -81,7 +81,7 @@ pip install uv
 ### 2. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/voice-dispatcher-microservice.git](https://github.com/dmgonzalezhenao/voice-dispatcher-microservice.git)
+git clone https://github.com/dmgonzalezhenao/voice-dispatcher-microservice.git
 cd voice-dispatcher-microservice
 ```
 
@@ -102,12 +102,12 @@ API_SECRET_KEY=your_internal_api_secret_key
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
 
 # Supabase Storage Configuration
-SUPABASE_URL=[https://your-project.supabase.co](https://your-project.supabase.co)
+SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_KEY=your_supabase_service_role_or_anon_key
-SUPABASE_BUCKET=audio-outputs
+SUPABASE_BUCKET=your_supabase_bucket
 
 # Frontend Configuration
-BACKEND_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+BACKEND_URL=http://127.0.0.1:8000
 ```
 
 ## ⚡ Local Execution
@@ -176,11 +176,11 @@ The interactive application will launch automatically at http://localhost:8501.
   "results": [
     {
       "phrase": "Hello, this is a batch voice dispatch test.",
-      "audio_data": "[https://your-project.supabase.co/storage/v1/object/public/audio-outputs/uuid1.mp3](https://your-project.supabase.co/storage/v1/object/public/audio-outputs/uuid1.mp3)"
+      "audio_data": "https://your-project.supabase.co/storage/v1/object/public/your_supabase_bucket/uuid1.mp3"
     },
     {
       "phrase": "Asynchronous execution significantly decreases latency.",
-      "audio_data": "[https://your-project.supabase.co/storage/v1/object/public/audio-outputs/uuid2.mp3](https://your-project.supabase.co/storage/v1/object/public/audio-outputs/uuid2.mp3)"
+      "audio_data": "https://your-project.supabase.co/storage/v1/object/public/your_supabase_bucket/uuid2.mp3"
     }
   ]
 }
