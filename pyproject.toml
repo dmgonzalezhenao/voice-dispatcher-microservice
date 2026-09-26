@@ -1,7 +1,10 @@
 [project]
 name = "voice-dispatcher-microservice"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "High-performance asynchronous TTS microservice using FastAPI, ElevenLabs, and Supabase CDN Storage"
+authors = [
+    { name = "Daniel Gonzalez", email = "dmgh20212022@gmail.com" }
+]
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
