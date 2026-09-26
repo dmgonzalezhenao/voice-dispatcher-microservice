@@ -79,14 +79,14 @@ async def dispatch_tts(
     Returns:
         SynthesisResponse: Payload containing total items processed, latency, and asset URLs.
     """
-    # Start high-precision execution timer to benchmark end-to-end performance
     start_time = time.perf_counter()
 
-    # Instantiate a shared async HTTP client session for non-blocking network calls
-    async with httpx.AsyncClient() as client:
-        # Step 1: Create concurrent asynchronous TTS synthesis tasks for each phrase
-        tts_tasks = [
-            synthesize_elevenlabs(
+    # Traffic light system to limit simultaneous calls to ElevenLabs to a maximum of two.
+    semaphore = asyncio.Semaphore(2)
+
+    async def safe_synthesize(phrase: str) -> bytes:
+        async with semaphore:
+            return await synthesize_elevenlabs(
                 client=client,
                 text=phrase,
                 voice_id=payload.voice_id,
@@ -94,31 +94,26 @@ async def dispatch_tts(
                 similarity_boost=payload.settings.similarity_boost,
                 custom_elevenlabs_key=x_elevenlabs_key
             )
-            for phrase in payload.phrases
-        ]
-        
-        # Execute all voice synthesis requests concurrently in parallel
+
+    async with httpx.AsyncClient() as client:
+        # Step 1: Trigger asynchronous synthesis while respecting the semaphore (maximum of 2 in parallel).
+        tts_tasks = [safe_synthesize(phrase) for phrase in payload.phrases]
         audio_bytes_list = await asyncio.gather(*tts_tasks)
 
-        # Step 2: Create concurrent upload tasks to persist synthesized audio to Supabase
+        # Step 2: Upload to Supabase in parallel (no concurrency restriction)
         upload_tasks = [
             upload_to_supabase(audio_bytes) 
             for audio_bytes in audio_bytes_list
         ]
-        
-        # Execute all cloud uploads concurrently in parallel
         public_urls = await asyncio.gather(*upload_tasks)
 
-    # Compute total processing latency in seconds
     elapsed_time = time.perf_counter() - start_time
 
-    # Map original text phrases to their corresponding public storage CDN URLs
     results = [
         AudioItemResult(phrase=phrase, audio_data=url)
         for phrase, url in zip(payload.phrases, public_urls)
     ]
 
-    # Construct and return standardized API response
     return SynthesisResponse(
         status="success",
         total_processed=len(results),
